@@ -2,18 +2,938 @@
 
 ## BFF层：
 
-
+存在的意义，有什么可以提升的方向？
 
 ## 列表查询
 
-- Streaming模式，分两批返回
-- Soa模式
+### 单程
+
+#### Streaming模式
+
+- 前端发送给api的request：
+
+```json
+{
+  "Head": {
+    "locale": "en-GB",
+    "source": "WAP",
+    "version": "500",
+    "currency": "GBP",
+    "uID": "E4827758298",
+    "vID": "1626262136061.32qx10",
+    "iP": "ed5d555eb0db65948684675d0c16b64076c2cad7950fd42614e2d72d2f60c170",
+    "clientID": "",
+    "deviceID": "",
+    "ticket": "ED3AF6A1A6F764CE0B764754CB8D34A51586154D564E901FB2FDD7803425E303",
+    "token": "",
+    "allianceInfo": {
+      "allianceID": 0,
+      "sID": 0,
+      "ouID": "",
+      "uuid": "",
+      "useDistributionType": 1
+    },
+    "transactionID": "20220217150521402",
+    "guest": false,
+    "group": "Trip",
+    "extendFields": {
+      "BatchedId": "c4823bd2-cecf-4c33-95f3-2fa8a1803e78",
+      "Member": "1"
+    },
+    "channel": "UKSite",
+    "pvId": "2671",
+    "sessionId": "187",
+    "abTesting": "",
+    "clientAppId": null,
+    "isQuickBooking": null,
+    "clientTime": null,
+    "productLine": null
+  },
+  "searchCriteria": {
+    "cabinClass": "YSGroup",
+    "passengerCount": {
+      "adult": 1,
+      "child": 0,
+      "infant": 0
+    },
+    "searchSegmentList": [
+      {
+        "departDate": "2022-03-29",
+        "departCity": "LON",
+        "arriveCity": "NYC",
+        "dCityVirtualRegionCode": null,
+        "aCityVirtualRegionCode": null
+      }
+    ]
+  },
+  "criteriaToken": "",
+  "shoppingId": null,
+  "priceKey": null,
+  "segmentNo": 1,
+  "filter": {
+    "filterSegmentList": [
+      {
+        "segmentNo": null,
+        "airlineList": [
+          
+        ],
+        "departAirportList": [
+          
+        ],
+        "arriveAirportList": [
+          
+        ],
+        "departTimeSpanList": null,
+        "arriveTimeSpanList": null,
+        "allianceList": null,
+        "transferCityList": null,
+        "craftTypeList": null
+      }
+    ],
+    "flagList": null,
+    "promotionId": null
+  },
+  "sort": null,
+  "pagination": null,
+  "fullData": false,
+  "clientTagList": null,
+  "clientParameterTagList": null,
+  "tagList": null,
+  "searchMode": null
+}
+```
+
+- api发送给agg的request：
+
+```json
+{
+  "RequestHeader": {
+    "MessageHeader": {
+      "Channel": "EnglishSite",
+      "SubChannelID": 8,
+      "TransactionID": "20220217150521402",
+      "RequestID": "20220217150521402",
+      "ClientIP": "45.251.105.183",
+      "DevicePlatform": "WAP",
+      "SessionID": "187"
+    }
+  },
+  "SearchCriteria": {
+    "JourneyRequest": [
+      {
+        "DepartDate": "2022-03-29",
+        "DepartLocation": {
+          "Type": 1,
+          "Location": "LON"
+        },
+        "ArriveLocation": {
+          "Type": 1,
+          "Location": "NYC"
+        }
+      }
+    ],
+    "PaxRequest": [
+      {
+        "AgeType": 1,
+        "Count": 1
+      }
+    ],
+    "CabinCode": [
+      "Y",
+      "W"
+    ],
+    "SaleCurrency": "GBP",
+    "Language": "EN_GB",
+    "UserParameter": {
+      "UserID": "E4827758298"
+    },
+    "IntlOrDomesticRequest": 1
+  }
+}
+```
+
+#### SOA模式
+
+- 前端发送给api的request：
+
+```json
+{
+  "Head": {
+    "locale": "en-XX",
+    "source": "Online",
+    "version": null,
+    "currency": "CNY",
+    "uID": "100018066",
+    "vID": "100018066",
+    "iP": null,
+    "clientID": null,
+    "deviceID": null,
+    "ticket": null,
+    "token": null,
+    "allianceInfo": null,
+    "transactionID": "1645081989244",
+    "guest": null,
+    "group": null,
+    "extendFields": null,
+    "channel": null,
+    "pvId": null,
+    "sessionId": null,
+    "abTesting": null,
+    "clientAppId": null,
+    "isQuickBooking": null,
+    "clientTime": null,
+    "productLine": null
+  },
+  "searchCriteria": {
+    "cabinClass": "Economy",
+    "passengerCount": {
+      "adult": 1,
+      "child": 0,
+      "infant": 0
+    },
+    "searchSegmentList": [
+      {
+        "departDate": "2022-02-24",
+        "departCity": "YMQ",
+        "arriveCity": "BEG",
+        "dCityVirtualRegionCode": null,
+        "aCityVirtualRegionCode": null
+      }
+    ]
+  },
+  "criteriaToken": null,
+  "shoppingId": null,
+  "priceKey": null,
+  "segmentNo": null,
+  "filter": null,
+  "sort": {
+    "type": "Price",
+    "asc": true,
+    "topChosenPrice": null,
+    "topAirline": null,
+    "topList": null
+  },
+  "pagination": {
+    "pageIndex": 1
+  },
+  "fullData": true,
+  "clientTagList": null,
+  "clientParameterTagList": null,
+  "tagList": null,
+  "searchMode": null
+}
+```
+
+- api发送给agg的request：
+
+```json
+{
+  "RequestHeader": {
+    "MessageHeader": {
+      "Channel": "EnglishSite",
+      "TransactionID": "1645081989244",
+      "RequestID": "1645081989244",
+      "DevicePlatform": "Online"
+    }
+  },
+  "SearchCriteria": {
+    "JourneyRequest": [
+      {
+        "DepartDate": "2022-02-24",
+        "DepartLocation": {
+          "Type": 1,
+          "Location": "YMQ"
+        },
+        "ArriveLocation": {
+          "Type": 1,
+          "Location": "BEG"
+        }
+      }
+    ],
+    "PaxRequest": [
+      {
+        "AgeType": 1,
+        "Count": 1
+      }
+    ],
+    "CabinCode": [
+      "Y"
+    ],
+    "SaleCurrency": "CNY",
+    "Language": "EN_XX",
+    "UserParameter": {
+      "UserID": "100018066"
+    },
+    "IntlOrDomesticRequest": 1
+  }
+}
+```
+
+### 往返
+
+#### Streaming模式，查第一程
+
+- 前端发送给api的request
+
+```json
+{
+  "Head": {
+    "locale": "en-GB",
+    "source": "WAP",
+    "version": "500",
+    "currency": "GBP",
+    "uID": "E4827758298",
+    "vID": "1626262136061.32qx10",
+    "iP": "ed5d555eb0db65948684675d0c16b64076c2cad7950fd42614e2d72d2f60c170",
+    "clientID": "",
+    "deviceID": "",
+    "ticket": "ED3AF6A1A6F764CE0B764754CB8D34A51586154D564E901FB2FDD7803425E303",
+    "token": "",
+    "allianceInfo": {
+      "allianceID": 0,
+      "sID": 0,
+      "ouID": "",
+      "uuid": "",
+      "useDistributionType": 1
+    },
+    "transactionID": "20220217152512462",
+    "guest": false,
+    "group": "Trip",
+    "extendFields": {
+      "BatchedId": "43622b3f-02d2-4149-8754-cc531dfcd93f",
+      "Member": "1"
+    },
+    "channel": "UKSite",
+    "pvId": "2674",
+    "sessionId": "187",
+    "abTesting": "",
+    "clientAppId": null,
+    "isQuickBooking": null,
+    "clientTime": null,
+    "productLine": null
+  },
+  "searchCriteria": {
+    "cabinClass": "YSGroup",
+    "passengerCount": {
+      "adult": 1,
+      "child": 0,
+      "infant": 0
+    },
+    "searchSegmentList": [
+      {
+        "departDate": "2022-03-29",
+        "departCity": "LON",
+        "arriveCity": "NYC",
+        "dCityVirtualRegionCode": null,
+        "aCityVirtualRegionCode": null
+      },
+      {
+        "departDate": "2022-04-01",
+        "departCity": "NYC",
+        "arriveCity": "LON",
+        "dCityVirtualRegionCode": null,
+        "aCityVirtualRegionCode": null
+      }
+    ]
+  },
+  "criteriaToken": "",
+  "shoppingId": "",
+  "priceKey": null,
+  "segmentNo": 1,
+  "filter": {
+    "filterSegmentList": [
+      {
+        "segmentNo": null,
+        "airlineList": [
+          ""
+        ],
+        "departAirportList": null,
+        "arriveAirportList": null,
+        "departTimeSpanList": null,
+        "arriveTimeSpanList": null,
+        "allianceList": null,
+        "transferCityList": null,
+        "craftTypeList": null
+      }
+    ],
+    "flagList": null,
+    "promotionId": null
+  },
+  "sort": null,
+  "pagination": null,
+  "fullData": false,
+  "clientTagList": null,
+  "clientParameterTagList": null,
+  "tagList": null,
+  "searchMode": null
+}
+```
+
+- api发送给agg的request
+
+```json
+{
+  "RequestHeader": {
+    "MessageHeader": {
+      "Channel": "EnglishSite",
+      "SubChannelID": 8,
+      "TransactionID": "20220217152512462",
+      "RequestID": "20220217152512462",
+      "ClientIP": "45.251.105.183",
+      "DevicePlatform": "WAP",
+      "SessionID": "187"
+    }
+  },
+  "SearchCriteria": {
+    "JourneyRequest": [
+      {
+        "DepartDate": "2022-03-29",
+        "DepartLocation": {
+          "Type": 1,
+          "Location": "LON"
+        },
+        "ArriveLocation": {
+          "Type": 1,
+          "Location": "NYC"
+        }
+      },
+      {
+        "DepartDate": "2022-04-01",
+        "DepartLocation": {
+          "Type": 1,
+          "Location": "NYC"
+        },
+        "ArriveLocation": {
+          "Type": 1,
+          "Location": "LON"
+        }
+      }
+    ],
+    "PaxRequest": [
+      {
+        "AgeType": 1,
+        "Count": 1
+      }
+    ],
+    "CabinCode": [
+      "Y",
+      "W"
+    ],
+    "SaleCurrency": "GBP",
+    "Language": "EN_GB",
+    "UserParameter": {
+      "UserID": "E4827758298"
+    },
+    "IntlOrDomesticRequest": 1
+  }
+}
+```
+
+#### SOA模式， 查第二程
+
+- 前端发送给api的request、
+
+```json
+{
+  "Head": {
+    "locale": "en-GB",
+    "source": "WAP",
+    "version": "500",
+    "currency": "GBP",
+    "uID": "E4827758298",
+    "vID": "1626262136061.32qx10",
+    "iP": "ed5d555eb0db65948684675d0c16b64076c2cad7950fd42614e2d72d2f60c170",
+    "clientID": "",
+    "deviceID": "",
+    "ticket": "ED3AF6A1A6F764CE0B764754CB8D34A51586154D564E901FB2FDD7803425E303",
+    "token": "",
+    "allianceInfo": {
+      "allianceID": 0,
+      "sID": 0,
+      "ouID": "",
+      "uuid": "",
+      "useDistributionType": 1
+    },
+    "transactionID": "20220217152512462",
+    "guest": false,
+    "group": "Trip",
+    "extendFields": {
+      "BatchedId": "43622b3f-02d2-4149-8754-cc531dfcd93f",
+      "Member": "1"
+    },
+    "channel": "UKSite",
+    "pvId": "2675",
+    "sessionId": "187",
+    "abTesting": "",
+    "clientAppId": null,
+    "isQuickBooking": null,
+    "clientTime": null,
+    "productLine": null
+  },
+  "searchCriteria": {
+    "cabinClass": "YSGroup",
+    "passengerCount": {
+      "adult": 1,
+      "child": 0,
+      "infant": 0
+    },
+    "searchSegmentList": [
+      {
+        "departDate": "2022-03-29",
+        "departCity": "LON",
+        "arriveCity": "NYC",
+        "dCityVirtualRegionCode": null,
+        "aCityVirtualRegionCode": null
+      },
+      {
+        "departDate": "2022-04-01",
+        "departCity": "NYC",
+        "arriveCity": "LON",
+        "dCityVirtualRegionCode": null,
+        "aCityVirtualRegionCode": null
+      }
+    ]
+  },
+  "criteriaToken": "tripType:RT|cabinClass:YSGroup|adult:1|child:0|infant:0|subChannel:8|channel:EnglishSite|currency:GBP|list:true|idc:SHAXY|date_1:2022-03-29|aCity_1:NYC|dCity_1:LON|date_2:2022-04-01|aCity_2:LON|dCity_2:NYC|vsType:3",
+  "shoppingId": "8000000128K3m0Az025Yqn002l01mvQOY02GG0umjCXF0qG0PAMcGdW80000000Jm000G000000010003N256G0024A0Gu00T3O800Fkf2qq6J",
+  "priceKey": null,
+  "segmentNo": 2,
+  "filter": {
+    "filterSegmentList": [
+      {
+        "segmentNo": null,
+        "airlineList": [
+          ""
+        ],
+        "departAirportList": null,
+        "arriveAirportList": null,
+        "departTimeSpanList": null,
+        "arriveTimeSpanList": null,
+        "allianceList": null,
+        "transferCityList": null,
+        "craftTypeList": null
+      }
+    ],
+    "flagList": null,
+    "promotionId": null
+  },
+  "sort": null,
+  "pagination": null,
+  "fullData": false,
+  "clientTagList": null,
+  "clientParameterTagList": null,
+  "tagList": null,
+  "searchMode": null
+}
+```
+
+- api发送给agg的request
+
+```json
+{
+  "RequestHeader": {
+    "MessageHeader": {
+      "Channel": "EnglishSite",
+      "SubChannelID": 8,
+      "TransactionID": "20220217152512462",
+      "RequestID": "20220217152512462",
+      "ClientIP": "45.251.105.183",
+      "DevicePlatform": "WAP",
+      "SessionID": "187"
+    }
+  },
+  "SearchCriteria": {
+    "JourneyRequest": [
+      {
+        "DepartDate": "2022-03-29",
+        "DepartLocation": {
+          "Type": 1,
+          "Location": "LON"
+        },
+        "ArriveLocation": {
+          "Type": 1,
+          "Location": "NYC"
+        }
+      },
+      {
+        "DepartDate": "2022-04-01",
+        "DepartLocation": {
+          "Type": 1,
+          "Location": "NYC"
+        },
+        "ArriveLocation": {
+          "Type": 1,
+          "Location": "LON"
+        }
+      }
+    ],
+    "PaxRequest": [
+      {
+        "AgeType": 1,
+        "Count": 1
+      }
+    ],
+    "CabinCode": [
+      "Y",
+      "W"
+    ],
+    "SaleCurrency": "GBP",
+    "Language": "EN_GB",
+    "UserParameter": {
+      "UserID": "E4827758298"
+    },
+    "IntlOrDomesticRequest": 1
+  },
+  "RouteSearch": {
+    "SearchMode": 1,
+    "MaxJourneyNo": 1,
+    "OfferToken": "8000000128K3m0Az025Yqn002l01mvQOY02GG0umjCXF0qG0PAMcGdW80000000Jm000G000000010003N256G0024A0Gu00T3O800Fkf2qq6J"
+  }
+}
+```
+
+### 报文分析(AGG层还有一次转换)
+
+```txt
+# transportationsearch
+{
+    "SearchRequestType":{
+        "RequestHeader":{
+            "MessageHeader":{
+                "Channel":"string",	SaleChannel                     
+                "SubChannelID":0,	子渠道号
+                "TransactionID":"string",	事务号
+                "RequestID":"string",	请求ID. (对应了国内的VisitorID)
+                "ClientIP":"string",	调用方IP
+                "DeviceID":"string", 	mobile的deviceID
+                "DevicePlatform":"string",	设备系统(ios/android/其他)
+                "SessionID":"string" 	前端会话ID
+            },
+            "LoggingLevel":0,
+            "DiagInput":"string"
+        },
+        "SearchCriteria":{
+            "JourneyRequest":[ 	用户请求的行程信息
+                {
+                    "DepartDate":"string",	出发日期，format: yyyy-MM-dd
+                    "DepartLocation":{	出发地点
+                        "Type":0,	Location的类型，1:CityCode; 2:CityID; 3:AirportCode; 4:RegionCode
+                        "Location":"string"		地点
+                    },
+                    "ArriveLocation":{	到达地点
+                        "Type":0,	Location的类型，1:CityCode; 2:CityID; 3:AirportCode; 4:RegionCode
+                        "Location":"string"		地点
+                    }
+                }
+            ],
+            "PaxRequest":[		乘客信息
+                {
+                    "AgeType":0,	乘客类型。1: Adult; 2: Child; 4: Infant;
+                    "Count":0,		乘客人数
+                    "Nationality":"string"		国籍
+                }
+            ],
+            "CabinCode":[		机票舱等， Y: 经济舱； W：超级经济舱； C：公务舱；F：头等舱
+                "string"		
+            ],
+            "SaleCurrency":"string",	币种
+            "Language":"string",	语种(Locale格式)
+            "ExtensionOption":[ 	扩展结点
+                {
+                    "Key":"string",
+                    "Value":"string"
+                }
+            ],
+            "UserParameter":{		用户信息
+                "UserID":"string", 	用户ID
+                "MemberLevel":"string",		携程会员等级
+                "Coordinate":{		坐标信息
+                    "Longitude":0,
+                    "Latitude":0
+                }
+            },
+            "AbTestOption":[		ABTest的Code和Version
+                {
+                    "Key":"string",
+                    "Value":"string"
+                }
+            ],
+            "ResultControl":{		结果控制参数	
+                "NeedRecommendation":false,		是否需要推荐位产品	
+                "ValidatingCarrier":[			偏好(出票)航司
+                    "string"
+                ],
+                "NonMatchRequestAgeType":false	是否根据PaxRequest中的乘客类型做严格匹配。请求国内时有效。 默认false：严格匹配。
+            },
+            "IntlOrDomesticRequest":0, 	请求类型，1: 国际请求; 2:国内请求。影响请求路由的选择！
+            "RequestScene":"string",	* 请求场景。空:默认是主流程查询。 MainProcess:主流程查询 FlightXHotel:宫格机酒主流程查询 FlightXHotelChangeFlight:宫格机酒更换航班查询
+            "AdvancedOption":{			高级搜索
+                "AdvancedJourneyOption":[	与用户程相关的信息
+                    {
+                        "JourneyNo":0,
+                        "TransportType":0,
+                        "TransportNo":[
+                            "string"
+                        ],
+                        "DepartTimeRange":{
+                            "Min":0,
+                            "Max":0
+                        },
+                        "ArriveTimeRange":{
+                            "Min":0,
+                            "Max":0
+                        },
+                        "AdvancedTransferOption":{
+                            "TransferType":0,
+                            "TransferTimeRange":{
+                                "Min":0,
+                                "Max":0
+                            },
+                            "TransferLocation":[
+                                {
+                                    "Type":0,
+                                    "Location":"string"
+                                }
+                            ]
+                        },
+                        "FlightAdvancedOption":{
+                            "CabinCode":[
+                                "string"
+                            ],
+                            "Carrier":"string"
+                        }
+                    }
+                ],
+                "InvoiceType":[
+                    0
+                ]
+            },
+            "SpecifiedOption":{		指定查询
+                "SpecifiedJourneyOption":[	与用户程相关的信息
+                    {
+                        "JourneyNo":0,
+                        "SegmentNo":0,
+                        "TransportType":0,	交通工具类型，1-flight; 2-train; 4-bus
+                        "TransportNo":"string",	交通号. e.g: FM1234
+                        "FlightSpecifiedOption":{	飞机交通类型具体指定信息
+                            "OperatingCarrier":"string",
+                            "CabinCode":[
+                                "string"
+                            ],
+                            "RBD":"string"
+                        },
+                        "DepartDate":"string",
+                        "DepartLocation":{
+                            "Type":0,
+                            "Location":"string"
+                        },
+                        "ArriveLocation":{
+                            "Type":0,
+                            "Location":"string"
+                        }
+                    }
+                ],
+                "ClientType":0,		调用方标识
+                "BookingChannel":[	指定Channel
+                    "string"
+                ],
+                "AgencyCode":[		指定票台.与ExcludesAgencyCode二选一
+                    "string"
+                ],
+                "ExcludesAgencyCode":[		指定排除的票台
+                    "string"
+                ],
+                "FareBasis":[
+                    "string"
+                ],
+                "FareClass":[
+                    "string"
+                ],
+                "ProductCategory":[
+                    0
+                ],
+                "SubProductCategory":[
+                    0
+                ]
+            }
+        },
+        "RouteSearch":{
+            "SearchMode":0,		* 查询模式，默认0或者RouteSearchType为空表示列表查询。 1: 普通反查 (匹配前MaxJourneyNo程的航班); 2: 严格反查 (严格匹配所有行程的价格); 3: 严格反查前N程 (严格匹配前MaxJourneyNo程的价格)
+            "MaxJourneyNo":0,	反查时待匹配的最大行程号(SearchMode = 2时忽略该字段)
+            "OfferToken":"string",		该接口返回的OfferToken，反查时用
+            "IntlAggRouteSearchToken":"string"		国际agg查询接口返回的价格token，为了兼容
+        }
+    }
+}
+```
+
+```txt
+# 真正的agg查询 aggregatorsearch
+# 都是走streaming查询
+	# transportationsearch对外暴露为soa接口时取最后一个批次返回，对外表现为全量返回
+	# transportationsearch对外暴露为dubbo接口时每取到一个批次都返回，对外表现为多批次返回
+{
+    "SearchRequestType":{
+        "RequestHeader":{
+            "MessageHeader":{
+                "SessionID":"string",
+                "TransactionID":"string",
+                "ChannelID":null,
+                "SubChannelID":0,
+                "CustomerID":"string",
+                "ClientIP":"string",
+                "VID":"string",
+                "RequestID":"string",
+                "DevicePlatform":"string"
+            },
+            "LoggingLevel":0,
+            "DiagInput":"string"
+        },
+        "SearchCriteria":{
+            "OrigDestRequest":[
+                {
+                    "Date":"string",
+                    "ORIG":"string",
+                    "DEST":"string"
+                }
+            ],
+            "TravelerRequest":[
+                {
+                    "AgeType":null,
+                    "TravelerCount":0,
+                    "Nationality":"string"
+                }
+            ],
+            "ValidatingCarrier":[
+                "string"
+            ],
+            "CabinClass":[
+                null
+            ],
+            "ExtensionOption":[
+                {
+                    "Key":"string",
+                    "Value":"string"
+                }
+            ],
+            "Currency":"string",
+            "AdvancedOption":{
+                "FlightCriteria":[
+                    {
+                        "OrigDestSeqNo":0,
+                        "FlightNo":"string",
+                        "OperatingCarrier":"string",
+                        "OperatingFlightNo":"string",
+                        "SeatClass":"string",
+                        "DepartureAirport":"string",
+                        "ArrivalAirport":"string",
+                        "DepartureDate":"string",
+                        "CabinClasses":[
+                            null
+                        ]
+                    }
+                ],
+                "ClientType":0,
+                "BookingChannel":[
+                    "string"
+                ],
+                "AgentCode":[
+                    "string"
+                ],
+                "ExcludeAgentCode":[
+                    "string"
+                ],
+                "FareBasis":[
+                    "string"
+                ],
+                "FareClass":[
+                    "string"
+                ],
+                "ProductCategory":[
+                    0
+                ],
+                "SubProductCategory":[
+                    0
+                ],
+                "OrigDestRequestOption":[
+                    {
+                        "TransferOption":{
+                            "TransferType":0,
+                            "TransferCity":[
+                                "string"
+                            ],
+                            "TransferTimeRange":{
+                                "Start":0,
+                                "End":0
+                            }
+                        },
+                        "CabinClass":[
+                            null
+                        ],
+                        "DepartureTimeRange":{
+                            "Start":0,
+                            "End":0
+                        },
+                        "ArrivalTimeRange":{
+                            "Start":0,
+                            "End":0
+                        },
+                        "Carrier":"string",
+                        "FlightNo":[
+                            "string"
+                        ]
+                    }
+                ],
+                "InvoiceType":[
+                    "string"
+                ]
+            },
+            "Language":"string"
+        },
+        "SearchContext":{
+            "PartitionSearchControl":{
+                "NeedPartitionedSearchResults":false,
+                "PartitionSearchToken":"string"
+            },
+            "RouteSearchControl":{
+                "RouteSearchMode":0,
+                "RouteSearchToken":"string",
+                "OrigDestSeqID":0
+            }
+        }
+    }
+}
+```
 
 根据报文进行的推测：
 
 1、列表查询也返回多运价，因为底层返回的列表查询的response中包含多个offer，但是因为列表查询只显示最低的，所有存在过滤的逻辑?
 
-### agg端响应报文分析：
+### 大交通（transport）端响应报文分析：
+因为每一程中交通工具的索引只有一种，所以推测当组合类型为flight+train时，A->A1->B,A->A1使用flight，A1->B使用train，则返回的transportSegment列表中存在两个元素
+
+以下推测的前提是单一交通工具flight
+尝试从前端搜索一张从LON-HKG-NYC的1成人OW票的角度来分析，前端传参到api，api调用transport engine得到以下报文。
+交通工具全程为flight > transportTypeGroup=1
+OW带中转 > transportSegment列表有两个元素
+  [journeyNo=1，segmentNo=1，transportRef=11
+  journeyNo=1，segmentNo=2，transportRef=12]
+假设存在多个出价信息，offer列表有两个元素，第一个为真实OW票，第二个为拼票
+  [transportRef=11，productDetailIndex=0，productRef=31
+  transportRef=12，productDetailIndex=0，productRef=31],
+  [transportRef=11，productDetailIndex=1，productRef=32
+  transportRef=12，productDetailIndex=2，productRef=33]
+
+合并运价=用户某一航程下的所有航段乘坐的航班号相同的航班的offer信息。如单程SHA（Flight1）TYO（Flight2）HKG，itinerary1有2个offer，itinerary2有3个offer，则将这五个offer合并
+
+列表查询和中间页查询调用普通反查
+
+退改签的时候调用严格反查
+
+列表查询的x产品只包括通用优惠券和中转服务
+
+需要推荐更高舱等时，返回查询舱等以及高于查询舱等的
+
 
 ```txt
 - ResponseBody
@@ -25,84 +945,84 @@
 			- transportRef 交通工具信息的索引号
 			- mainSegmentInd 是否行程的主航段
 			- tag 扩展节点 key-value
-        - offer 出价信息
-        	- transportFareMapping 与transportRef一一对应
-        		- transportRef 航班、火车、bus等的详情索引号
-        		- paxSeat 乘客类型对应的舱等舱位信息
-        			- ageTypeGroup 对应的乘客类型组，可表示多个乘客类型，1：adult 2：child 4：infant
-        			- seatCount 余票信息，国内机票的婴儿始终10
-        			- productDetailIndex 与productDetailList的下标关联，从0开始
-        			- flightSeat 机票舱位及相关信息
-        				- puSequence 运价的puSequence
-        				- fcSequence 运价的fcSequence
-        				- cabinCode 机票舱等 Y：经济舱 W： 超级经济舱 C：公务舱 F：头等舱
-        				- rBD 子舱位
-        				- marketingCabinCode 舱等区域code：Y、S、C、F
-        				- SeatSource 来源：0：正常av 1：库存 2：martain 3：境外舱位 4：定额 5：od
-        				- stockId 库存id 库存类产品减库存的依据
-        				- mileageCredit 航班舱位可累计里程
-        				- rBDDisclosure 国内特别舱位信息
-        					- name 舱位名称
-        					- shortname 舱位简称
-        					- description 舱位描述
-        			- tranSeat 火车座位及相关信息
-        				- seatTypeName 座位类型名称
-        	- productDetail 行程组合的价格单元列表
-        		- transportProductType 交通工具的价格类型 1：flightProductType 2：train 3：bus
-        		- productRef flightProduct、trainProduct、busProduct对应的索引号
-        		- compatiblePenaltyKey 退改签反查key 对应国际的penaltykey，国内的rcKe
-        	- offerToken 大交通价格反查token agg内部解析使用，对外不保证一致
-        	- productCombinationType 产品组合类型 包括单程直飞的部分信息
-        	- offerPackage 绑定在offer维度的辅营产品
-        		- extensionField gv产品说明 muc
-        			- productActionMode 产品处理方式，按位与 1：拦截 2：注册
-        			- productRemark 产品标识说明
-        		- extramarketingField 其他营销信息 兼容引擎和agg适配的信息 key-value
-        		- bundleItem 附加产品列表
-        			- bundleType 产品类型，目前支持的取值类型giftProduct cashback couponproduct flightxcomposition hotel ancillaries  memberprivilege PriceReduction BrandAttribute
-        			- productRef 绑定信息的索引
-        			- serviceAssociation 该产品所属的航段信息，为空表示属于整个行程
-        				- journeyNo 绑定的行程号 从1开始
-        				- segmentNo 某一程内的段号 从0开始
-        			- ageTypeGroup 适用的乘客类型组，可表示多个乘客类型
-                    - productDetailIndex 
-                    - tag 绑定附加属性 key-value
-            - baggageRef 行李信息
-               	- transportRef 航班、火车、bus等的详情索引号
-               	- paxBaggage
-              		- ageTypeGroup 适用的乘客类型组
-               		- baggageWay 行李额类型
-               			- baggageTypeRef 关联baggageType.refNum
-               			- type 0: 托运 1：手提
-               		- baggageSpecificDesc 行李描述 多语言
-            - baggageAncillary 增值行李：区分打包和加购方式，且每种方式可能有不同的规格
-            	- bundleItem 附加产品列表 同上 offerpackage.bundleItem
-            	- baggageRef 行李信息 同上 offer.packageref
-            	- orderWay 1：打包 2：加购
-            - priceAttributeID 国际机票价格属性ID集合
-            - tag 扩展节点 key-value
-            - recommendedType  推荐运价类型 0：普通运价 1：推荐运价 2：普通+推荐（与前端展示相关）
-            - transportHotelToken 机酒token 
-            - priority 优先级 越小越高
-            - journeyAttachment 与行程相关的信息，元素最多与行程数一样
-            	- journeyNo 行程号，从1开始
-            	- productCombinationType 国内的产品组合类型， RT/MT时有值
-        - flightManType 0: 不是飞人 1：普通飞 2：超级飞
-        - interchange 换乘信息
-        	- journeyNo 行程号，从1开始
-        	- segmentNo 每一程内段号，从1开始
-        	- position 换乘信息是在段前还是在段后 1：前 2：后
-        	- interchangeRoute 换乘的格式化信息，List表示不同的换乘路线
-        		- interchangeStep 多种交通工具的有序组合
-        			- vehicleType 1： tran 2：taxi 3：公交巴士 4： 地铁 5：自驾 6：长途汽车
-        			- durationMinutes 时间 单位分 
-        			- distance 距离 单位公里
-        			- price 价格
-        			- remark 提示信息
-        	- textRemarkRef 换乘的非格式化信息，索引号
-        	- checkInRemarkRef checkIn的描述信息，索引号
-        - tag 扩展节点
-        - priority 优先级 越小越高   
+    - offer 出价信息
+      - transportFareMapping 与transportRef一一对应
+        - transportRef 航班、火车、bus等的详情索引号
+        - paxSeat 乘客类型对应的舱等舱位信息
+          - ageTypeGroup 对应的乘客类型组，可表示多个乘客类型，1：adult 2：child 4：infant
+          - seatCount 余票信息，国内机票的婴儿始终10
+          - productDetailIndex 与productDetailList的下标关联，从0开始
+          - flightSeat 机票舱位及相关信息
+            - puSequence 运价的puSequence
+            - fcSequence 运价的fcSequence
+            - cabinCode 机票舱等 Y：经济舱 W： 超级经济舱 C：公务舱 F：头等舱
+            - rBD 子舱位
+            - marketingCabinCode 舱等区域code：Y、S、C、F
+            - SeatSource 来源：0：正常av 1：库存 2：martain 3：境外舱位 4：定额 5：od
+            - stockId 库存id 库存类产品减库存的依据
+            - mileageCredit 航班舱位可累计里程
+            - rBDDisclosure 国内特别舱位信息
+              - name 舱位名称
+              - shortname 舱位简称
+              - description 舱位描述
+          - tranSeat 火车座位及相关信息
+            - seatTypeName 座位类型名称
+      - productDetail 行程组合的价格单元列表
+        - transportProductType 交通工具的价格类型 1：flightProductType 2：train 3：bus
+        - productRef flightProduct、trainProduct、busProduct对应的索引号
+        - compatiblePenaltyKey 退改签反查key 对应国际的penaltykey，国内的rcKe
+      - offerToken 大交通价格反查token agg内部解析使用，对外不保证一致
+      - productCombinationType 产品组合类型 包括单程直飞的部分信息
+      - offerPackage 绑定在offer维度的辅营产品
+        - extensionField gv产品说明 muc
+          - productActionMode 产品处理方式，按位与 1：拦截 2：注册
+          - productRemark 产品标识说明
+        - extramarketingField 其他营销信息 兼容引擎和agg适配的信息 key-value
+        - bundleItem 附加产品列表
+          - bundleType 产品类型，目前支持的取值类型giftProduct cashback couponproduct flightxcomposition hotel ancillaries  memberprivilege PriceReduction BrandAttribute
+          - productRef 绑定信息的索引
+          - serviceAssociation 该产品所属的航段信息，为空表示属于整个行程
+            - journeyNo 绑定的行程号 从1开始
+            - segmentNo 某一程内的段号 从0开始
+          - ageTypeGroup 适用的乘客类型组，可表示多个乘客类型
+                - productDetailIndex 同transportFareMapping.paxSeat.productDetailIndex
+                - tag 绑定附加属性 key-value
+        - baggageRef 行李信息
+            - transportRef 航班、火车、bus等的详情索引号
+            - paxBaggage
+              - ageTypeGroup 适用的乘客类型组
+              - baggageWay 行李额类型
+                - baggageTypeRef 关联baggageType.refNum
+                - type 0: 托运 1：手提
+              - baggageSpecificDesc 行李描述 多语言
+        - baggageAncillary 增值行李：区分打包和加购方式，且每种方式可能有不同的规格
+          - bundleItem 附加产品列表 同上 offerpackage.bundleItem
+          - baggageRef 行李信息 同上 offer.packageref
+          - orderWay 1：打包 2：加购
+        - priceAttributeID 国际机票价格属性ID集合
+        - tag 扩展节点 key-value
+        - recommendedType  推荐运价类型 0：普通运价 1：推荐运价 2：普通+推荐（与前端展示相关）
+        - transportHotelToken 机酒token 
+        - priority 优先级 越小越高
+        - journeyAttachment 与行程相关的信息，元素最多与行程数一样
+          - journeyNo 行程号，从1开始
+          - productCombinationType 国内的产品组合类型， RT/MT时有值
+    - flightManType 0: 不是飞人 1：普通飞 2：超级飞
+    - interchange 换乘信息
+      - journeyNo 行程号，从1开始
+      - segmentNo 每一程内段号，从1开始
+      - position 换乘信息是在段前还是在段后 1：前 2：后
+      - interchangeRoute 换乘的格式化信息，List表示不同的换乘路线
+        - interchangeStep 多种交通工具的有序组合
+          - vehicleType 1： tran 2：taxi 3：公交巴士 4： 地铁 5：自驾 6：长途汽车
+          - durationMinutes 时间 单位分 
+          - distance 距离 单位公里
+          - price 价格
+          - remark 提示信息
+      - textRemarkRef 换乘的非格式化信息，索引号
+      - checkInRemarkRef checkIn的描述信息，索引号
+    - tag 扩展节点
+    - priority 优先级 越小越高   
        
 	- metaData  
 		- saleCurrency 销售币种
@@ -614,7 +1534,7 @@
 ```
 
 ```txt
-- filterOptionList 过滤可选项
+- filterOptionList 过滤可选项（返回给前端做筛选用）
 	- segmentNo 行程序号，非合并查询时不输出（什么是合并查询？）
 	- airlineList 航司
 	- departAirportList 出发机场
@@ -689,397 +1609,27 @@
     		- salePrice 售价
 ```
 
-## Request
-
-### API-ListSearchFirst（Streaming）
-列表查询请求
-一共请求两次，第一次加锁写缓存（主线程返回第一批数据，子线程等待所有数据到达写缓存），第二次解锁读缓存
-```json
-{
-  "Head": {
-    "locale": "en-GB",
-    "source": "WAP",
-    "version": "500",
-    "currency": "EUR",
-    "uID": "E4827758298",
-    "vID": "1626262136061.32qx10",
-    "iP": "ed5d555eb0db65948684675d0c16b64076c2cad7950fd42614e2d72d2f60c170",
-    "clientID": "",
-    "deviceID": "",
-    "ticket": "ED3AF6A1A6F764CE0B764754CB8D34A51586154D564E901FB2FDD7803425E303",
-    "token": "",
-    "allianceInfo": {
-      "allianceID": 2175,
-      "sID": 957211,
-      "ouID": "mIp8KHOGEey28AJCrBEAEQ",
-      "uuid": "",
-      "useDistributionType": 1
-    },
-    "transactionID": "20220207151136221",
-    "guest": false,
-    "group": "Trip",
-    "extendFields": {
-      "BatchedId": "78b6870c-5a4c-460e-a123-3cd070a20ff5",
-      "Member": "1"
-    },
-    "channel": "UKSite",
-    "pvId": "2603",
-    "sessionId": "177",
-    "abTesting": "",
-    "clientAppId": null,
-    "isQuickBooking": null,
-    "clientTime": null,
-    "productLine": null
-  },
-  "searchCriteria": {
-    "cabinClass": "YSGroup",
-    "passengerCount": {
-      "adult": 1,
-      "child": 0,
-      "infant": 0
-    },
-    "searchSegmentList": [
-      {
-        "departDate": "2022-02-28",
-        "departCity": "LON",
-        "arriveCity": "NYC",
-        "dCityVirtualRegionCode": null,
-        "aCityVirtualRegionCode": null
-      },
-      {
-        "departDate": "2022-03-03",
-        "departCity": "NYC",
-        "arriveCity": "LON",
-        "dCityVirtualRegionCode": null,
-        "aCityVirtualRegionCode": null
-      }
-    ]
-  },
-  "criteriaToken": "",
-  "shoppingId": "",
-  "priceKey": null,
-  "segmentNo": 1,
-  "filter": {
-    "filterSegmentList": [
-      {
-        "segmentNo": null,
-        "airlineList": [
-          ""
-        ],
-        "departAirportList": null,
-        "arriveAirportList": null,
-        "departTimeSpanList": null,
-        "arriveTimeSpanList": null,
-        "allianceList": null,
-        "transferCityList": null,
-        "craftTypeList": null
-      }
-    ],
-    "flagList": null,
-    "promotionId": null
-  },
-  "sort": null,
-  "pagination": null,
-  "fullData": false,
-  "clientTagList": null,
-  "clientParameterTagList": null,
-  "tagList": null,
-  "searchMode": null
-}
-```
-
-### AGG-ListSearchFirst（Streaming）
-
-```json
-{
-  "RequestHeader": {
-    "MessageHeader": {
-      "Channel": "EnglishSite",
-      "SubChannelID": 8,
-      "TransactionID": "20220207155925366",
-      "RequestID": "20220207155925366",
-      "ClientIP": "45.251.105.183",
-      "DevicePlatform": "WAP",
-      "SessionID": "178"
-    }
-  },
-  "SearchCriteria": {
-    "JourneyRequest": [
-      {
-        "DepartDate": "2022-02-28",
-        "DepartLocation": {
-          "Type": 1,
-          "Location": "LON"
-        },
-        "ArriveLocation": {
-          "Type": 1,
-          "Location": "NYC"
-        }
-      },
-      {
-        "DepartDate": "2022-03-03",
-        "DepartLocation": {
-          "Type": 1,
-          "Location": "NYC"
-        },
-        "ArriveLocation": {
-          "Type": 1,
-          "Location": "LON"
-        }
-      }
-    ],
-    "PaxRequest": [
-      {
-        "AgeType": 1,
-        "Count": 1
-      }
-    ],
-    "CabinCode": [
-      "Y",
-      "W"
-    ],
-    "SaleCurrency": "EUR",
-    "Language": "EN_GB",
-    "UserParameter": {
-      "UserID": "E4827758298"
-    },
-    "IntlOrDomesticRequest": 1
-  }
-}
-```
-
-### API-ListSearchFirst（Soa）
-
 ```txt
-
-{
-  "Head": {
-    "locale": "en-us",
-    "source": "ONLINE",
-    "version": "703.000",
-    "currency": "HKD",
-    "uID": null,
-    "vID": null,
-    "iP": "e9348c510160f14fd41b5dec378c8f24cd6d6abdceb7fbd3cce70e32d350b5e1",
-    "clientID": null,
-    "deviceID": null,
-    "ticket": null,
-    "token": null,
-    "allianceInfo": null,
-    "transactionID": "1644218775449",
-    "guest": null,
-    "group": "trip",
-    "extendFields": null,
-    "channel": null,
-    "pvId": null,
-    "sessionId": null,
-    "abTesting": null,
-    "clientAppId": null,
-    "isQuickBooking": null,
-    "clientTime": null,
-    "productLine": null
-  },
-  "searchCriteria": {
-    "cabinClass": "YSGroup",
-    "passengerCount": {
-      "adult": 1,
-      "child": 0,
-      "infant": 0
-    },
-    "searchSegmentList": [
-      {
-        "departDate": "2022-04-13",
-        "departCity": "HKG",
-        "arriveCity": "MNL",
-        "dCityVirtualRegionCode": null,
-        "aCityVirtualRegionCode": null
-      }
-    ]
-  },
-  "criteriaToken": null,
-  "shoppingId": null,
-  "priceKey": null,
-  "segmentNo": null,
-  "filter": null,
-  "sort": {
-    "type": "Score",
-    "asc": true,
-    "topChosenPrice": null,
-    "topAirline": null,
-    "topList": null
-  },
-  "pagination": null,
-  "fullData": true<1>,
-  "clientTagList": null,
-  "clientParameterTagList": null,
-  "tagList": null,
-  "searchMode": null
-}
-# <1> 只请求一次
+- selectedSegmentList 选中的行程信息 如返程对应的去程，多程第N程对应的N-1程（N > 1）
+	- segmentNo 航程
+	- departCity 出发城市 
+	- arriveCity 到达城市
+	- departDateTime
+	- arriveDateTime
+	- days
+	- duration
+	- mainCabinClass
+	- flightList
+	- departAirport
+	- arriveAirPort
+	- flagList
 ```
 
-### API-ListSearchNext（Soa）
 
-```json
-{
-  "Head": {
-    "locale": "en-GB",
-    "source": "WAP",
-    "version": "500",
-    "currency": "EUR",
-    "uID": "E4827758298",
-    "vID": "1626262136061.32qx10",
-    "iP": "ed5d555eb0db65948684675d0c16b64076c2cad7950fd42614e2d72d2f60c170",
-    "clientID": "",
-    "deviceID": "",
-    "ticket": "ED3AF6A1A6F764CE0B764754CB8D34A51586154D564E901FB2FDD7803425E303",
-    "token": "",
-    "allianceInfo": {
-      "allianceID": 2175,
-      "sID": 957211,
-      "ouID": "mIp8KHOGEey28AJCrBEAEQ",
-      "uuid": "",
-      "useDistributionType": 1
-    },
-    "transactionID": "20220207191731507",
-    "guest": false,
-    "group": "Trip",
-    "extendFields": {
-      "BatchedId": "f37d8639-08a1-42c7-953c-f19165fcb614",
-      "Member": "1"
-    },
-    "channel": "UKSite",
-    "pvId": "2633",
-    "sessionId": "182",
-    "abTesting": "",
-    "clientAppId": null,
-    "isQuickBooking": null,
-    "clientTime": null,
-    "productLine": null
-  },
-  "searchCriteria": {
-    "cabinClass": "YSGroup",
-    "passengerCount": {
-      "adult": 1,
-      "child": 0,
-      "infant": 0
-    },
-    "searchSegmentList": [
-      {
-        "departDate": "2022-02-28",
-        "departCity": "LON",
-        "arriveCity": "NYC",
-        "dCityVirtualRegionCode": null,
-        "aCityVirtualRegionCode": null
-      },
-      {
-        "departDate": "2022-03-07",
-        "departCity": "NYC",
-        "arriveCity": "LON",
-        "dCityVirtualRegionCode": null,
-        "aCityVirtualRegionCode": null
-      }
-    ]
-  },
-  "criteriaToken": "tripType:RT|cabinClass:YSGroup|adult:1|child:0|infant:0|subChannel:8|channel:EnglishSite|currency:EUR|list:true|idc:SHAXY|date_1:2022-02-28|aCity_1:NYC|dCity_1:LON|date_2:2022-03-07|aCity_2:LON|dCity_2:NYC|vsType:3",
-  "shoppingId": "8000000128K3m09y05z2qn002WW1mvQOY029m0uWjCXF0j00GcMcGdW80000000Jm000G0000000100042I56G0024AIee00ZDy800G1P2qq6J",
-  "priceKey": null,
-  "segmentNo": 2,
-  "filter": {
-    "filterSegmentList": [
-      {
-        "segmentNo": null,
-        "airlineList": [
-          ""
-        ],
-        "departAirportList": null,
-        "arriveAirportList": null,
-        "departTimeSpanList": null,
-        "arriveTimeSpanList": null,
-        "allianceList": null,
-        "transferCityList": null,
-        "craftTypeList": null
-      }
-    ],
-    "flagList": null,
-    "promotionId": null
-  },
-  "sort": null,
-  "pagination": null,
-  "fullData": false,
-  "clientTagList": null,
-  "clientParameterTagList": null,
-  "tagList": null,
-  "searchMode": null
-}
-```
 
-### AGG-ListSearchNext（Soa）
+## 中间页查询
 
-```json
-{
-  "RequestHeader": {
-    "MessageHeader": {
-      "Channel": "EnglishSite",
-      "SubChannelID": 8,
-      "TransactionID": "20220207191731507",
-      "RequestID": "20220207191731507",
-      "ClientIP": "45.251.105.183",
-      "DevicePlatform": "WAP",
-      "SessionID": "182"
-    }
-  },
-  "SearchCriteria": {
-    "JourneyRequest": [
-      {
-        "DepartDate": "2022-02-28",
-        "DepartLocation": {
-          "Type": 1,
-          "Location": "LON"
-        },
-        "ArriveLocation": {
-          "Type": 1,
-          "Location": "NYC"
-        }
-      },
-      {
-        "DepartDate": "2022-03-07",
-        "DepartLocation": {
-          "Type": 1,
-          "Location": "NYC"
-        },
-        "ArriveLocation": {
-          "Type": 1,
-          "Location": "LON"
-        }
-      }
-    ],
-    "PaxRequest": [
-      {
-        "AgeType": 1,
-        "Count": 1
-      }
-    ],
-    "CabinCode": [
-      "Y",
-      "W"
-    ],
-    "SaleCurrency": "EUR",
-    "Language": "EN_GB",
-    "UserParameter": {
-      "UserID": "E4827758298"
-    },
-    "IntlOrDomesticRequest": 1
-  },
-  "RouteSearch": {
-    "SearchMode": 1,
-    "MaxJourneyNo": 1,
-    "OfferToken": "8000000128K3m09y05z2qn002WW1mvQOY029m0uWjCXF0j00GcMcGdW80000000Jm000G0000000100042I56G0024AIee00ZDy800G1P2qq6J"
-  }
-}
-```
-
-### API-GroupSearch
+### 前端发送给api的request：
 
 ```json
 {
@@ -1128,7 +1678,7 @@
 }
 ```
 
-### AGG-GroupSearch
+### api发送给agg的request：
 
 ```json
 {
@@ -1182,7 +1732,9 @@
 }
 ```
 
-### API-DetailSearch
+### 填写页查询
+
+### 前端发送给api的request：
 
 ```json
 {
@@ -1231,7 +1783,7 @@
 }
 ```
 
-### AGG-DetailSearch
+### api发送给agg的request：
 
 ```txt
 {
@@ -1285,7 +1837,9 @@
 # <1>SearchMode == 2 和列表查询，中间页查询 SearchMode == 1 不同 =》严格反查
 ```
 
-### API-XlistSearch
+### X查询
+
+### 前端发送给api的request
 
 ```json
 {
@@ -1345,7 +1899,7 @@
 }
 ```
 
-### AGG-XlistSearch
+### api发送给agg的request：
 
 ```json
 {
